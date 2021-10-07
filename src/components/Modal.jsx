@@ -11,6 +11,7 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
   let total = 0;
   cart.map((e) => {
     total += e.cant * e.price;
+    return '';
   });
   const modalStyles = {
     content: {
@@ -104,7 +105,7 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
             <div
               className='btn btn-outline-dark mb-5 mt-3 checkout mx-auto d-block w-25'
               onClick={() => {
-                Swal.fire('Thanks for your buying', '', 'success');
+                Swal.fire('Thanks for your purchase', '', 'success');
                 setCart([]);
                 setIsOpen(false);
               }}
