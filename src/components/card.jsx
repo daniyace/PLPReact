@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-
+import img from '../assets/cart.svg';
 import '../styles/card.sass';
 
 const Card = ({
+  prod,
+  addtocart,
   disposition,
   middlS,
   isScrolling,
@@ -20,6 +22,7 @@ const Card = ({
   const [fistload, setFisrtLoad] = useState(true);
   const variants = {
     static: {
+      opacity: 1,
       rotateY: 0,
       transition: {
         type: 'spring',
@@ -27,6 +30,7 @@ const Card = ({
       },
     },
     hover: {
+      opacity: 0.3,
       rotateY: 180,
       transition: {
         type: 'spring',
@@ -39,6 +43,22 @@ const Card = ({
       top: middlS + window.scrollY - middle,
     },
     none: {},
+  };
+  const show = {
+    hide: {
+      opacity: 0,
+      transition: {
+        type: 'spring',
+        duration: 0.7,
+      },
+    },
+    show: {
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        duration: 0.7,
+      },
+    },
   };
 
   useEffect(() => {
@@ -104,10 +124,26 @@ const Card = ({
           alt={title}
         />
       </motion.div>
-      {/* <div className='card-body'>
-        <h5 class='card-title'>{title}</h5>
-        <p className='card-text'>{description}</p>
-      </div> */}
+      <motion.div
+        className='card-body text-center w-100'
+        initial={{
+          position: 'absolute',
+          bottom: 0,
+        }}
+        variants={show}
+        animate={animation === 1 ? 'show' : 'hide'}
+      >
+        <h6 class='card-title'>{title}</h6>
+        <h6 class='card-title'>${price}</h6>
+        <div
+          className='btn btn-outline-dark cart'
+          onClick={() => {
+            addtocart(prod);
+          }}
+        >
+          <img src={img} alt='cart' />
+        </div>
+      </motion.div>
     </motion.div>
   );
 };

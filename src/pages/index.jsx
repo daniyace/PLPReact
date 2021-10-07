@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { animateScroll as scroll } from 'react-scroll';
+import Swal from 'sweetalert2';
 import Card from '../components/card';
 import Card2 from '../components/card2';
+import Modal from '../components/Modal';
 import '../styles/index.sass';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -13,10 +15,10 @@ const Index = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [lastYPos, setLastYPos] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [middle, setMiddle] = useState(window.innerHeight / 2);
-  const [prodtoshow, setProdtoshow] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const queryp = async () => {
     await axios
       .get('https://fakestoreapi.com/products')
@@ -34,6 +36,11 @@ const Index = () => {
       .then((response) => {
         if (response.data) {
           setCategories(response.data);
+          scroll.scrollTo(window.innerHeight / 3, {
+            duration: 1,
+            delay: 50,
+            smooth: 'easeInOutQuint',
+          });
           //console.log(response.data);
         }
       })
@@ -76,7 +83,6 @@ const Index = () => {
         }
       }
 
-      const yPos = window.scrollY;
       //const isScrollingUp = yPos < lastYPos;
       setIsScrolling(true);
     };
@@ -85,10 +91,24 @@ const Index = () => {
       setIsScrolling(false);
       window.removeEventListener('scroll', handleScroll, false);
     };
-  }, [lastYPos]);
+  }, []);
+
+  const addtocart = (prod) => {
+    let arr = [...cart];
+    let i = arr.findIndex((x) => x.id === prod.id);
+    if (i !== -1) {
+      prod.cant = arr[i].cant + 1;
+      arr.splice(i, 1);
+    } else prod.cant = 1;
+
+    arr.push(prod);
+    setCart([...arr]);
+    Swal.fire('Added to your cart', '', 'success');
+  };
 
   return (
     <div className='col-12'>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} cart={cart} setCart={setCart}/>
       <div className='container'>
         <nav className='navbar navbar-light bg-light sticky-top'>
           <div className='container-fluid'>
@@ -106,7 +126,14 @@ const Index = () => {
             >
               WEARE®
             </span>
-            <span className='navbar-brand mb-0 tit'>CART</span>
+            <span
+              className='navbar-brand mb-0 tit'
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              CART
+            </span>
           </div>
         </nav>
         {selectedPage === '' ? (
@@ -116,7 +143,7 @@ const Index = () => {
               style={{ top: middle, position: 'fixed' }}
             />
             <div className='list-cont' id='inicio'>
-              <motion.ul class='list-group'>
+              <motion.ul className='list-group'>
                 {categories.map((cat, i) => {
                   return (
                     <motion.li
@@ -131,10 +158,15 @@ const Index = () => {
                       }}
                       key={cat}
                       id={cat}
-                      class='list-group-item border-0 list text-break bg-transparent'
+                      className='list-group-item border-0 list text-break bg-transparent'
                     >
                       <motion.p
                         onClick={() => {
+                          scroll.scrollTo(0, {
+                            duration: 0,
+                            delay: 0,
+                            smooth: 'easeInOutQuint',
+                          });
                           setSelectedPage(cat);
                         }}
                         className='text-center pt-4 pb-4'
@@ -151,20 +183,32 @@ const Index = () => {
                 if (selectedPage === '') {
                   if (selectedCategorie !== '')
                     if (product.category === selectedCategorie) {
-                      return (
-                        <Card
-                          disposition={1}
-                          middlS={middle}
-                          isScrolling={isScrolling}
-                          id={product.id}
-                          title={product.title}
-                          price={product.price}
-                          description={product.description}
-                          category={product.category}
-                          image={product.image}
-                          rating={product.rating}
-                        />
-                      );
+                      if (
+                        product.id === 2 ||
+                        product.id === 3 ||
+                        product.id === 5 ||
+                        product.id === 8 ||
+                        product.id === 9 ||
+                        product.id === 12 ||
+                        product.id === 17 ||
+                        product.id === 18
+                      )
+                        return (
+                          <Card
+                            prod={product}
+                            addtocart={addtocart}
+                            disposition={1}
+                            middlS={middle}
+                            isScrolling={isScrolling}
+                            id={product.id}
+                            title={product.title}
+                            price={product.price}
+                            description={product.description}
+                            category={product.category}
+                            image={product.image}
+                            rating={product.rating}
+                          />
+                        );
                     }
                 }
                 return '';
@@ -173,11 +217,13 @@ const Index = () => {
           </>
         ) : (
           <>
-            <div className='cards d-flex flex-wrap align-items-center justify-content-evenly mt-3'>
+            <div className='cards d-flex flex-wrap align-items-center justify-content-evenly mb-5 mt-2'>
               {products.map((product, i) => {
                 if (product.category === selectedPage) {
                   return (
                     <Card2
+                      prod={product}
+                      addtocart={addtocart}
                       disposition={2}
                       middlS={middle}
                       isScrolling={isScrolling}
@@ -193,6 +239,8 @@ const Index = () => {
                 } else if (selectedPage === 'all')
                   return (
                     <Card2
+                      prod={product}
+                      addtocart={addtocart}
                       disposition={2}
                       middlS={middle}
                       isScrolling={isScrolling}
@@ -215,6 +263,11 @@ const Index = () => {
             <span
               className='navbar-brand tit'
               onClick={() => {
+                scroll.scrollTo(0, {
+                  duration: 0,
+                  delay: 0,
+                  smooth: 'easeInOutQuint',
+                });
                 setSelectedPage(`women's clothing`);
               }}
             >
@@ -223,6 +276,11 @@ const Index = () => {
             <span
               className='navbar-brand tit border border-dark rounded-pill all'
               onClick={() => {
+                scroll.scrollTo(0, {
+                  duration: 0,
+                  delay: 0,
+                  smooth: 'easeInOutQuint',
+                });
                 setSelectedCategorie('');
                 setSelectedPage('all');
               }}
@@ -232,6 +290,11 @@ const Index = () => {
             <span
               className='navbar-brand tit'
               onClick={() => {
+                scroll.scrollTo(0, {
+                  duration: 0,
+                  delay: 0,
+                  smooth: 'easeInOutQuint',
+                });
                 setSelectedPage(`men's clothing`);
               }}
             >

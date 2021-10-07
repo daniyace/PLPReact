@@ -9,7 +9,7 @@ ReactDOM.render(
       href='https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Ubuntu+Mono:wght@400;700&display=swap'
       rel='stylesheet'
     />
-    <Index />
+      <Index />
   </React.StrictMode>,
   document.getElementById('root')
 );
