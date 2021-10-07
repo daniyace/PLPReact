@@ -49,8 +49,10 @@ const Index = () => {
 
   useEffect(() => {
     if (firstLoad && products.length === 0 && categories.length === 0) {
+      let arr = JSON.parse(localStorage.getItem('cart'));
       queryp();
       queryc();
+      if (arr !== null) setCart(arr);
       setFirstLoad(false);
     }
   }, [products, firstLoad, categories]);
@@ -103,18 +105,46 @@ const Index = () => {
 
     arr.push(prod);
     setCart([...arr]);
+    localStorage.setItem('cart', JSON.stringify(arr));
     Swal.fire('Added to your cart', '', 'success');
   };
+  const removefromcart = (prod) => {
+    let arr = [...cart];
+    let i = arr.findIndex((x) => x.id === prod.id);
+    if (i !== -1) {
+      arr.splice(i, 1);
+    }
 
+    setCart([...arr]);
+    localStorage.setItem('cart', JSON.stringify(arr));
+  };
   return (
     <div className='col-12'>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} cart={cart} setCart={setCart}/>
+      <Modal
+        removefromcart={removefromcart}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        cart={cart}
+        setCart={setCart}
+      />
       <div className='container'>
         <nav className='navbar navbar-light bg-light sticky-top'>
           <div className='container-fluid'>
-            <span className='navbar-brand mb-0 tit'>MENU</span>
             <span
-              className='navbar-brand mb-0 tit'
+              className='navbar-brand mb-0 tit pointer'
+              onClick={() => {
+                scroll.scrollTo(window.innerHeight / 3, {
+                  duration: 1,
+                  delay: 50,
+                  smooth: 'easeInOutQuint',
+                });
+                setSelectedPage('');
+              }}
+            >
+              MENU
+            </span>
+            <span
+              className='navbar-brand mb-0 tit pointer'
               onClick={() => {
                 scroll.scrollTo(window.innerHeight / 3, {
                   duration: 1,
@@ -127,7 +157,7 @@ const Index = () => {
               WEARE®
             </span>
             <span
-              className='navbar-brand mb-0 tit'
+              className='navbar-brand mb-0 tit pointer'
               onClick={() => {
                 setIsOpen(true);
               }}
@@ -169,7 +199,7 @@ const Index = () => {
                           });
                           setSelectedPage(cat);
                         }}
-                        className='text-center pt-4 pb-4'
+                        className='text-center pointer pt-4 pb-4'
                       >
                         {cat}
                       </motion.p>
@@ -258,7 +288,7 @@ const Index = () => {
             </div>
           </>
         )}
-        <nav className='navbar navbar-light bg-light fixed-bottom'>
+        <nav className='navbar navbar-light bg-light fixed-bottom pointer'>
           <div className='container'>
             <span
               className='navbar-brand tit'
@@ -274,7 +304,7 @@ const Index = () => {
               WOMAN
             </span>
             <span
-              className='navbar-brand tit border border-dark rounded-pill all'
+              className='navbar-brand tit border border-dark rounded-pill all pointer'
               onClick={() => {
                 scroll.scrollTo(0, {
                   duration: 0,
@@ -288,7 +318,7 @@ const Index = () => {
               ALL
             </span>
             <span
-              className='navbar-brand tit'
+              className='navbar-brand tit pointer'
               onClick={() => {
                 scroll.scrollTo(0, {
                   duration: 0,

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 ReactModal.setAppElement('#root');
 ReactModal.defaultStyles.overlay.backgroundColor = 'rgba(0,0,0,.5)';
 
-const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
+const Modal = ({ isOpen, setIsOpen, cart, setCart, removefromcart }) => {
   let total = 0;
   cart.map((e) => {
     total += e.cant * e.price;
@@ -22,7 +22,7 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       position: 'absolute',
-      width: '720px',
+      maxWidth: '720px',
       overflowY: 'auto',
       maxHeight: '95vh',
     },
@@ -53,18 +53,18 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
               },
             }}
           >
-            <h1 className='text-center mt-4 text-capitalize'>
+            <div className='pointer exit' onClick={() => setIsOpen(false)}>
+              x
+            </div>
+            <h1 className='text-center mt-4 mb-5 text-capitalize'>
               Add products to your Cart
             </h1>
-            <div
-              className='btn mt-5 mb-4 btn-outline-danger'
-              onClick={() => setIsOpen(false)}
-            >
-              Close
-            </div>
           </motion.div>
         ) : (
           <div>
+            <div className='pointer exit' onClick={() => setIsOpen(false)}>
+              x
+            </div>
             {cart.map((product, i) => {
               return (
                 <motion.div
@@ -96,6 +96,13 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
                   <h5 className='col-5 text-center pt-3 d-flex justify-content-center'>
                     Total: ${product.cant * product.price}
                   </h5>
+
+                  <div
+                    className='btn mt-4 btn-outline-dark checkout mx-auto d-block w-25'
+                    onClick={() => removefromcart(product)}
+                  >
+                    remove
+                  </div>
                 </motion.div>
               );
             })}
@@ -107,6 +114,7 @@ const Modal = ({ isOpen, setIsOpen, cart, setCart }) => {
               onClick={() => {
                 Swal.fire('Thanks for your purchase', '', 'success');
                 setCart([]);
+                localStorage.removeItem('cart')
                 setIsOpen(false);
               }}
             >
