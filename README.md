@@ -1,6 +1,10 @@
 # A Product list page on React
 
-Intall node modules 
+Deployment page
+
+https://daniyace.github.io/plpreact/
+
+Install node modules 
 
 ### `npm install`
 
