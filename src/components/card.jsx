@@ -85,6 +85,9 @@ const Card = ({
     <motion.div
       id={'card' + id}
       className='card'
+      onTap={() => {
+        setAnimation(1);
+      }}
       onMouseEnter={() => {
         setAnimation(1);
       }}

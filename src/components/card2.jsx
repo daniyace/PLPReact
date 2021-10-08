@@ -56,13 +56,16 @@ const Card2 = ({
     <motion.div
       id={'card' + id}
       className='card'
+      onTap={() => {
+        setAnimation(1);
+      }}
       onMouseEnter={() => {
         setAnimation(1);
       }}
       onMouseLeave={() => {
         setAnimation(0);
       }}
-      initial={{ top: 300 }}
+      initial={{ top: window.innerHeight }}
       variants={variants}
       animate={'static'}
     >

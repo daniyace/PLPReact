@@ -36,11 +36,14 @@ const Index = () => {
       .then((response) => {
         if (response.data) {
           setCategories(response.data);
-          scroll.scrollTo(window.innerHeight / 3, {
-            duration: 1,
-            delay: 50,
-            smooth: 'easeInOutQuint',
-          });
+          scroll.scrollTo(
+            window.innerHeight < 768 ? window.innerHeight / 3 : 100,
+            {
+              duration: 1,
+              delay: 50,
+              smooth: 'easeInOutQuint',
+            }
+          );
           //console.log(response.data);
         }
       })
@@ -133,11 +136,14 @@ const Index = () => {
             <span
               className='navbar-brand mb-0 tit pointer'
               onClick={() => {
-                scroll.scrollTo(window.innerHeight / 3, {
-                  duration: 1,
-                  delay: 50,
-                  smooth: 'easeInOutQuint',
-                });
+                scroll.scrollTo(
+                  window.innerHeight < 768 ? window.innerHeight / 3 : 100,
+                  {
+                    duration: 1,
+                    delay: 50,
+                    smooth: 'easeInOutQuint',
+                  }
+                );
                 setSelectedPage('');
               }}
             >
@@ -146,11 +152,14 @@ const Index = () => {
             <span
               className='navbar-brand mb-0 tit pointer'
               onClick={() => {
-                scroll.scrollTo(window.innerHeight / 3, {
-                  duration: 1,
-                  delay: 50,
-                  smooth: 'easeInOutQuint',
-                });
+                scroll.scrollTo(
+                  window.innerHeight < 768 ? window.innerHeight / 3 : 100,
+                  {
+                    duration: 1,
+                    delay: 50,
+                    smooth: 'easeInOutQuint',
+                  }
+                );
                 setSelectedPage('');
               }}
             >
