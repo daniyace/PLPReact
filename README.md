@@ -2,7 +2,7 @@
 
 Intall node modules 
 
-### `npm intall`
+### `npm install`
 
 Run:
 
